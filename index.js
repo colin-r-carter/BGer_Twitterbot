@@ -6,7 +6,7 @@ require('dotenv').config();
 const regexBGer = /(\d+)([A-Z])_(\d+\/\d+)/g
 const regexDate = /\d{2}.\d{2}.\d{4}/g
 const apikey = process.env.API_KEY 
-const env = "BGE-Update-Test" 
+const env = "BGE-Update-Test" //Todo: Change to production 
 const ifttt = "https://maker.ifttt.com/trigger/" + env + "/json/with/key/" + apikey;
 
 //TODO: Remove String from date to get actual date. 
@@ -21,8 +21,6 @@ const ifttt = "https://maker.ifttt.com/trigger/" + env + "/json/with/key/" + api
         if (day.length < 2){ 
             day = '0' + day;
         };
-
-        console.log(apikey)
 
     if(!(dayOfWeek === 6) && !(dayOfWeek  === 0)){
   
@@ -41,8 +39,15 @@ const ifttt = "https://maker.ifttt.com/trigger/" + env + "/json/with/key/" + api
                     txt = txt.replace(/\s\s+/g, ' ');
                     txt = txt.replace(/\*/g, '');
                     let output = "Das Bundesgericht hat am "+day +"." +month+"."+year+" den Entscheid " + BGer + " vom "+ date + " zur Publikation vorgesehen. Er behandelt: "+txt+"Link: " + url; 
-                    console.log(output);
-
+                    // console.log(output);
+                    axios.post(ifttt, { "update" : output })
+                      .then(function (response) {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
+                      console.log("Posted to IFTTT")
                 }
               });
 
